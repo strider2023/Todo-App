@@ -4,8 +4,9 @@ import android.content.Context;
 import android.os.Bundle;
 import android.support.v4.content.AsyncTaskLoader;
 
-import com.app.todoapp.dao.TaskStatus;
+import com.app.todoapp.dao.enums.TaskStatus;
 import com.app.todoapp.dao.TodoItemsDAO;
+import com.app.todoapp.persist.DBUtil;
 import com.app.todoapp.util.NetworkUtils;
 
 import org.json.simple.JSONArray;
@@ -27,6 +28,7 @@ public class TasksDataLoader extends AsyncTaskLoader<List<TodoItemsDAO>> {
     private JSONParser jsonParser;
     private String decodedString;
     private TaskStatus taskStatus;
+    private DBUtil dbUtil;
 
     public TasksDataLoader(Context context, Bundle params) {
         super(context);
@@ -38,6 +40,7 @@ public class TasksDataLoader extends AsyncTaskLoader<List<TodoItemsDAO>> {
         } else {
             taskStatus = TaskStatus.CLOSED;
         }
+        dbUtil = DBUtil.getInstance(context);
     }
 
     @Override
@@ -58,21 +61,26 @@ public class TasksDataLoader extends AsyncTaskLoader<List<TodoItemsDAO>> {
                     for(int i = 0; i < todoList.size(); i++) {
                         JSONObject todoData = (JSONObject) todoList.get(i);
                         if (taskStatus == TaskStatus.valueOf(((Long) todoData.get("state")).intValue())) {
-                            todoItemsDAOs.add(new TodoItemsDAO((Long) todoData.get("id"),
+                            todoItemsDAOs.add(new TodoItemsDAO(-1l,
+                                    (Long) todoData.get("id"),
                                     todoData.get("name").toString(),
                                     ((Long) todoData.get("state")).intValue()));
                         }
+                        //TODO Save data if not present
                     }
                 }
-                todoItemsDAOs.add(new TodoItemsDAO(1, "One", (params.getBoolean("pending")) ? 0 : 1));
-                todoItemsDAOs.add(new TodoItemsDAO(2, "Two", (params.getBoolean("pending")) ? 0 : 1));
-                todoItemsDAOs.add(new TodoItemsDAO(3, "Three", (params.getBoolean("pending")) ? 0 : 1));
-                todoItemsDAOs.add(new TodoItemsDAO(4, "Four", (params.getBoolean("pending")) ? 0 : 1));
-                todoItemsDAOs.add(new TodoItemsDAO(5, "Five", (params.getBoolean("pending")) ? 0 : 1));
             } catch (Exception e) {
                 e.printStackTrace();
                 return todoItemsDAOs;
             }
+        }
+        try {
+            dbUtil.openDB();
+            todoItemsDAOs.addAll(dbUtil.retriveAll(taskStatus.ordinal()));
+            dbUtil.closeDB();
+        } catch (Exception e) {
+            e.printStackTrace();
+            return todoItemsDAOs;
         }
         return todoItemsDAOs;
     }

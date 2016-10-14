@@ -11,7 +11,7 @@ import android.view.ViewGroup;
 import android.widget.CompoundButton;
 
 import com.app.todoapp.R;
-import com.app.todoapp.dao.TaskStatus;
+import com.app.todoapp.dao.enums.TaskStatus;
 import com.app.todoapp.dao.TodoItemsDAO;
 import com.app.todoapp.dao.interfaces.TodoItemTouchHelperAdapter;
 

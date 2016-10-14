@@ -1,7 +1,6 @@
 package com.app.todoapp.fragments;
 
 import android.app.ProgressDialog;
-import android.content.Context;
 import android.os.Bundle;
 import android.support.design.widget.BottomSheetBehavior;
 import android.support.design.widget.Snackbar;
@@ -16,13 +15,16 @@ import android.support.v7.widget.helper.ItemTouchHelper;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.inputmethod.InputMethodManager;
 
 import com.app.todoapp.R;
 import com.app.todoapp.adapter.TodoListAdapter;
 import com.app.todoapp.dao.TodoItemsDAO;
+import com.app.todoapp.dao.interfaces.TaskListener;
 import com.app.todoapp.dao.interfaces.TodoItemTouchHelperAdapter;
+import com.app.todoapp.threads.TodoDeleteTask;
+import com.app.todoapp.threads.TodoSaveTask;
 import com.app.todoapp.threads.TasksDataLoader;
+import com.app.todoapp.threads.TodoUpdateTask;
 import com.app.todoapp.util.TodoItemTouchHelperCallback;
 import com.github.clans.fab.FloatingActionButton;
 import com.github.clans.fab.FloatingActionMenu;
@@ -35,7 +37,7 @@ import butterknife.ButterKnife;
 import butterknife.OnClick;
 
 public class TasksFragment extends Fragment implements
-        LoaderManager.LoaderCallbacks<List<TodoItemsDAO>>, TodoItemTouchHelperAdapter {
+        LoaderManager.LoaderCallbacks<List<TodoItemsDAO>>, TodoItemTouchHelperAdapter, TaskListener {
 
     private static final String ARG_SECTION_NUMBER = "section_number";
     private View viewHolder;
@@ -46,6 +48,7 @@ public class TasksFragment extends Fragment implements
     private TodoListAdapter todoListAdapter;
     private ItemTouchHelper.Callback callback;
     private List<TodoItemsDAO> data = new ArrayList<>();
+    private List<TodoItemsDAO> addedData = new ArrayList<>();
     private List<TodoItemsDAO> deletedData = new ArrayList<>();
     private TodoItemsDAO selectedData;
     private boolean isEditMode = false;
@@ -139,9 +142,9 @@ public class TasksFragment extends Fragment implements
                 isEditMode = false;
                 selectedPosition = -1;
             } else {
-                data.add(new TodoItemsDAO(-1, todoInput.getEditableText().toString(), 0));
-                todoListAdapter.notifyDataSetChanged();
-                //TODO add it to database
+                new TodoSaveTask(1, getContext(), this)
+                        .execute(new TodoItemsDAO[] {new TodoItemsDAO(-1, -1, todoInput.getEditableText().toString(), 0)});
+                //TODO add it to database in bulk
             }
         } else {
             Snackbar.make(recyclerView, "Task field empty!", Snackbar.LENGTH_SHORT).show();
@@ -201,10 +204,13 @@ public class TasksFragment extends Fragment implements
                             if(deletedData.contains(selectedData)) {
                                 deletedData.remove(selectedData);
                             }
+                            viewHolder.findViewById(R.id.main_empty_list).setVisibility(View.GONE);
                         }
                     })
                     .show();
         } else {
+            selectedData.setStatus(1);
+            new TodoUpdateTask(3, getContext(), this).execute(new TodoItemsDAO[]{selectedData});
             Snackbar.make(actionMenu, "Task completed.", Snackbar.LENGTH_SHORT)
                     .show();
         }
@@ -229,7 +235,8 @@ public class TasksFragment extends Fragment implements
     @Override
     public void onPause() {
         super.onPause();
-        //TODO delete items if any from database
+        new TodoDeleteTask(2, getContext(), this)
+                .execute(deletedData.toArray(new TodoItemsDAO[deletedData.size()]));
     }
 
     @Override
@@ -237,5 +244,18 @@ public class TasksFragment extends Fragment implements
         super.onResume();
         getActivity().getSupportLoaderManager()
                 .initLoader(LOADER_ID, queryData, this).forceLoad();
+    }
+
+    @Override
+    public void onSuccess(int threadId) {
+        if(threadId == 1) {
+            data.add(new TodoItemsDAO(-1, -1, todoInput.getEditableText().toString(), 0));
+            todoListAdapter.notifyDataSetChanged();
+        }
+    }
+
+    @Override
+    public void onFaliure(int threadId) {
+        Snackbar.make(actionMenu, "Oops something went wrong!", Snackbar.LENGTH_SHORT).show();
     }
 }

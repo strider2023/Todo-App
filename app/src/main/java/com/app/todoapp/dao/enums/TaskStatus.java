@@ -1,4 +1,4 @@
-package com.app.todoapp.dao;
+package com.app.todoapp.dao.enums;
 
 public enum TaskStatus {
 
