@@ -121,9 +121,10 @@
                         android:layout_height="wrap_content"
                         android:layout_margin="5dp"
                         android:hint="What do you want me to remember?"
-                        android:inputType="textCapSentences"
-                        android:maxLines="5"
+                        android:inputType="textCapSentences|textMultiLine"
                         android:textSize="18sp"
+                        android:minLines="2"
+                        android:maxLines="4"
                         android:imeOptions="normal"/>
 
                 </android.support.design.widget.TextInputLayout>

@@ -30,13 +30,13 @@ public class MainActivity extends AppCompatActivity {
 
     @BindView(R.id.container) ViewPager mViewPager;
     @BindView(R.id.tabs) TabLayout tabLayout;
+    @BindView(R.id.toolbar) Toolbar toolbar;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         ButterKnife.bind(this);
-        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
         mSectionsPagerAdapter = new SectionsPagerAdapter(getSupportFragmentManager());

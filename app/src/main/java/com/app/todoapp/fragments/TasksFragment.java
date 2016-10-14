@@ -1,6 +1,7 @@
 package com.app.todoapp.fragments;
 
 import android.app.ProgressDialog;
+import android.content.Context;
 import android.os.Bundle;
 import android.support.design.widget.BottomSheetBehavior;
 import android.support.design.widget.Snackbar;
@@ -15,6 +16,7 @@ import android.support.v7.widget.helper.ItemTouchHelper;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.inputmethod.InputMethodManager;
 
 import com.app.todoapp.R;
 import com.app.todoapp.adapter.TodoListAdapter;
@@ -116,9 +118,6 @@ public class TasksFragment extends Fragment implements
                     }
                 });
 
-        getActivity().getSupportLoaderManager()
-                .initLoader(LOADER_ID, queryData, this).forceLoad();
-
         return viewHolder;
     }
 
@@ -159,7 +158,7 @@ public class TasksFragment extends Fragment implements
     @OnClick(R.id.menu_new_voice)
     void onCreateNewVoiceTODO() {
         actionMenu.close(true);
-        Snackbar.make(addVoiceTODO, "Feature currently unavailable!", Snackbar.LENGTH_SHORT).show();
+        Snackbar.make(actionMenu, "Feature currently unavailable!", Snackbar.LENGTH_SHORT).show();
     }
 
     @Override
@@ -193,7 +192,7 @@ public class TasksFragment extends Fragment implements
     public void onItemDismiss(final int position, boolean isDeleted) {
         final TodoItemsDAO selectedData = data.get(position);
         if(isDeleted) {
-            Snackbar.make(recyclerView, "Task removed.", Snackbar.LENGTH_LONG)
+            Snackbar.make(actionMenu, "Task removed.", Snackbar.LENGTH_LONG)
                     .setAction("UNDO", new View.OnClickListener() {
                         @Override
                         public void onClick(View view) {
@@ -206,7 +205,7 @@ public class TasksFragment extends Fragment implements
                     })
                     .show();
         } else {
-            Snackbar.make(recyclerView, "Task completed.", Snackbar.LENGTH_SHORT)
+            Snackbar.make(actionMenu, "Task completed.", Snackbar.LENGTH_SHORT)
                     .show();
         }
         data.remove(position);
@@ -231,5 +230,12 @@ public class TasksFragment extends Fragment implements
     public void onPause() {
         super.onPause();
         //TODO delete items if any from database
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        getActivity().getSupportLoaderManager()
+                .initLoader(LOADER_ID, queryData, this).forceLoad();
     }
 }
