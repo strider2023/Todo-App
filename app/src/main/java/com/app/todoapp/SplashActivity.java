@@ -8,9 +8,6 @@ import android.support.v7.app.AppCompatActivity;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
 
-/**
- * Created by arindamnath on 10/10/16.
- */
 public class SplashActivity extends AppCompatActivity {
 
     private Animation animFast, animSlow, animVerySlow;

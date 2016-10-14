@@ -2,9 +2,6 @@ package com.app.todoapp.dao;
 
 import android.support.v4.app.Fragment;
 
-/**
- * Created by arindamnath on 11/10/16.
- */
 public class PagerFragmentDAO {
 
     private Fragment fragment;

@@ -1,24 +1,21 @@
 package com.app.todoapp.dao;
 
-/**
- * Created by arindamnath on 11/10/16.
- */
 public class TodoItemsDAO {
 
     private long id;
     private String data;
-    private int status;
+    private TaskStatus status;
 
     public TodoItemsDAO() {
         this.id = -1l;
         this.data = "";
-        this.status = 0;
+        this.status = TaskStatus.OPEN;
     }
 
     public TodoItemsDAO(long id, String data, int status) {
         this.id = id;
         this.data = data;
-        this.status = status;
+        this.status = TaskStatus.valueOf(status);
     }
 
     public long getId() {
@@ -37,11 +34,11 @@ public class TodoItemsDAO {
         this.data = data;
     }
 
-    public int getStatus() {
+    public TaskStatus getStatus() {
         return status;
     }
 
     public void setStatus(int status) {
-        this.status = status;
+        this.status = TaskStatus.valueOf(status);
     }
 }

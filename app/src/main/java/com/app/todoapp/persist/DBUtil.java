@@ -13,9 +13,6 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
 
-/**
- * Created by arindamnath on 11/10/16.
- */
 public class DBUtil {
 
     private class DBHelper extends SQLiteOpenHelper {
@@ -25,12 +22,14 @@ public class DBUtil {
 
         public final String TODO = "todo_items";
         public final String TODO_ROW_ID = "id";
+        public final String TODO_SERVER_ID = "server_id";
         public final String TODO_DATA = "text";
         public final String TODO_STATUS = "status";
         public final String TODO_DATETIME = "createdOn";
 
         public final String DB_CREATE_TABLE_LOCATIONS = "create table  " + TODO +
                 "(" + TODO_ROW_ID + " integer primary key autoincrement, " +
+                TODO_SERVER_ID + " integer, " +
                 TODO_DATA + " text not null, " +
                 TODO_STATUS + " int not null, " +
                 TODO_DATETIME + " text not null);";
@@ -77,7 +76,7 @@ public class DBUtil {
         DateFormat dateFormat = new SimpleDateFormat("MM/dd/yyyy HH:mm");
         ContentValues values = new ContentValues();
         values.put(dbHelper.TODO_DATA, todoItemsDAO.getData());
-        values.put(dbHelper.TODO_STATUS, todoItemsDAO.getStatus());
+        values.put(dbHelper.TODO_STATUS, todoItemsDAO.getStatus().ordinal());
         values.put(dbHelper.TODO_DATETIME, dateFormat.format(new Date()));
         todoItemsDAO.setId(mDatabase.insert(dbHelper.TODO, null, values));
         return todoItemsDAO;
@@ -99,7 +98,7 @@ public class DBUtil {
     public long updateEvent(TodoItemsDAO todoItemsDAO) {
         ContentValues values = new ContentValues();
         values.put(dbHelper.TODO_DATA, todoItemsDAO.getData());
-        values.put(dbHelper.TODO_STATUS, todoItemsDAO.getStatus());
+        values.put(dbHelper.TODO_STATUS, todoItemsDAO.getStatus().ordinal());
         return mDatabase.update(dbHelper.TODO, values, dbHelper.TODO_ROW_ID + "=" + todoItemsDAO.getId(), null);
     }
 }

@@ -8,6 +8,8 @@ import android.support.v4.view.ViewPager;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.MotionEvent;
+import android.view.View;
 
 import com.app.todoapp.adapter.SectionsPagerAdapter;
 import com.app.todoapp.dao.PagerFragmentDAO;
@@ -41,6 +43,13 @@ public class MainActivity extends AppCompatActivity {
         mSectionsPagerAdapter.setPagerFragmentDAOList(pagerFragmentDAOs);
         mViewPager.setAdapter(mSectionsPagerAdapter);
         tabLayout.setupWithViewPager(mViewPager);
+        //Remove comment to disable swipe
+        /*mViewPager.setOnTouchListener(new View.OnTouchListener() {
+            @Override
+            public boolean onTouch(View view, MotionEvent motionEvent) {
+                return true;
+            }
+        });*/
     }
 
 

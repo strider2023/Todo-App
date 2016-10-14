@@ -10,9 +10,6 @@ import com.app.todoapp.dao.PagerFragmentDAO;
 import java.util.ArrayList;
 import java.util.List;
 
-/**
- * Created by arindamnath on 11/10/16.
- */
 public class SectionsPagerAdapter extends FragmentPagerAdapter {
 
     private List<PagerFragmentDAO> pagerFragmentDAOList = new ArrayList<>();
