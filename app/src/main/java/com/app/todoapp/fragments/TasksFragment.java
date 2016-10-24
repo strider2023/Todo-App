@@ -21,15 +21,16 @@ import com.app.todoapp.adapter.TodoListAdapter;
 import com.app.todoapp.dao.TodoItemsDAO;
 import com.app.todoapp.dao.interfaces.TaskListener;
 import com.app.todoapp.dao.interfaces.TodoItemTouchHelperAdapter;
-import com.app.todoapp.threads.TodoDeleteTask;
-import com.app.todoapp.threads.TodoSaveTask;
-import com.app.todoapp.threads.TasksDataLoader;
-import com.app.todoapp.threads.TodoUpdateTask;
+import com.app.todoapp.threads.tasks.TodoDeleteTask;
+import com.app.todoapp.threads.tasks.TodoSaveTask;
+import com.app.todoapp.threads.loaders.TasksDataLoader;
+import com.app.todoapp.threads.tasks.TodoUpdateTask;
 import com.app.todoapp.util.TodoItemTouchHelperCallback;
 import com.github.clans.fab.FloatingActionButton;
 import com.github.clans.fab.FloatingActionMenu;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 import butterknife.BindView;
@@ -178,6 +179,7 @@ public class TasksFragment extends Fragment implements
         if(data.size() > 0) {
             this.data = data;
             viewHolder.findViewById(R.id.main_empty_list).setVisibility(View.GONE);
+            Collections.sort(data);
             todoListAdapter.setData(data);
             todoListAdapter.notifyDataSetChanged();
         } else {

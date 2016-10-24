@@ -1,4 +1,4 @@
-package com.app.todoapp.threads;
+package com.app.todoapp.threads.loaders;
 
 import android.content.Context;
 import android.os.Bundle;
@@ -60,12 +60,12 @@ public class TasksDataLoader extends AsyncTaskLoader<List<TodoItemsDAO>> {
                 if(todoList.size() > 0 ) {
                     for(int i = 0; i < todoList.size(); i++) {
                         JSONObject todoData = (JSONObject) todoList.get(i);
-                        if (taskStatus == TaskStatus.valueOf(((Long) todoData.get("state")).intValue())) {
+                        //if (taskStatus == TaskStatus.valueOf(((Long) todoData.get("state")).intValue())) {
                             todoItemsDAOs.add(new TodoItemsDAO(-1l,
                                     (Long) todoData.get("id"),
                                     todoData.get("name").toString(),
                                     ((Long) todoData.get("state")).intValue()));
-                        }
+                        //}
                         //TODO Save data if not present
                     }
                 }

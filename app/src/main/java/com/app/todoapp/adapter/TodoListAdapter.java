@@ -1,5 +1,6 @@
 package com.app.todoapp.adapter;
 
+import android.graphics.Paint;
 import android.support.v4.view.MotionEventCompat;
 import android.support.v7.widget.AppCompatCheckBox;
 import android.support.v7.widget.RecyclerView;
@@ -44,6 +45,9 @@ public class TodoListAdapter extends RecyclerView.Adapter<TodoListAdapter.ItemVi
     public void onBindViewHolder(final ItemViewHolder holder, final int position) {
         holder.todoData.setText(mItems.get(position).getData());
         holder.todoData.setChecked((mItems.get(position).getStatus() == TaskStatus.CLOSED) ? true : false);
+        if(holder.todoData.isChecked()) {
+            holder.todoData.setPaintFlags(holder.todoData.getPaintFlags()| Paint.STRIKE_THRU_TEXT_FLAG);
+        }
         holder.todoData.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(CompoundButton compoundButton, boolean isChecked) {

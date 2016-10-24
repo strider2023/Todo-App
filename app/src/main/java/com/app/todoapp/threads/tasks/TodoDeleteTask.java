@@ -1,4 +1,4 @@
-package com.app.todoapp.threads;
+package com.app.todoapp.threads.tasks;
 
 import android.content.Context;
 import android.os.AsyncTask;
@@ -11,13 +11,13 @@ import com.app.todoapp.persist.DBUtil;
 /**
  * Created by school on 14/10/16.
  */
-public class TodoSaveTask extends AsyncTask<TodoItemsDAO, Void, TaskEvents> {
+public class TodoDeleteTask extends AsyncTask<TodoItemsDAO, Void, TaskEvents> {
 
     private DBUtil dbUtil;
     private TaskListener taskListener;
     private int threadId;
 
-    public TodoSaveTask(int threadId, Context context, TaskListener taskListener) {
+    public TodoDeleteTask(int threadId, Context context, TaskListener taskListener) {
         dbUtil = DBUtil.getInstance(context);
         this.threadId = threadId;
         this.taskListener = taskListener;
@@ -29,7 +29,7 @@ public class TodoSaveTask extends AsyncTask<TodoItemsDAO, Void, TaskEvents> {
             try {
                 dbUtil.openDB();
                 for (TodoItemsDAO todoItemsDAO : todoItemsDAOs) {
-                    dbUtil.insertNewEvent(todoItemsDAO);
+                    dbUtil.deleteItem(todoItemsDAO.getId());
                 }
                 dbUtil.closeDB();
                 return TaskEvents.SUCCESS;

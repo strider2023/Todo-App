@@ -2,7 +2,9 @@ package com.app.todoapp.dao;
 
 import com.app.todoapp.dao.enums.TaskStatus;
 
-public class TodoItemsDAO {
+import java.util.Comparator;
+
+public class TodoItemsDAO implements Comparable<TodoItemsDAO>{
 
     private long id;
     private long serverId;
@@ -52,5 +54,15 @@ public class TodoItemsDAO {
 
     public long getServerId() {
         return serverId;
+    }
+
+    @Override
+    public int compareTo(TodoItemsDAO todoItemsDAO) {
+        if(todoItemsDAO.status.ordinal() < this.status.ordinal())
+            return 1;
+        else if(todoItemsDAO.status.ordinal() > this.status.ordinal())
+            return -1;
+        else
+            return 1;
     }
 }
